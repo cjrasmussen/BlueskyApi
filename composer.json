@@ -1,0 +1,29 @@
+{
+  "name": "cjrasmussen/bluesky-api",
+  "description": "Simple helper for interacting with the Bluesky API/AT protocol",
+  "version": "1.0.0",
+  "keywords": ["Bluesky"],
+  "homepage": "https://cjr.dev",
+  "license": "MIT",
+  "authors": [
+    {
+      "name": "Clark Rasmussen",
+      "homepage": "https://cjr.dev",
+      "role": "Developer"
+    }
+  ],
+  "support": {
+    "issues": "https://github.com/cjrasmussen/BlueskyApi/issues",
+    "source": "https://github.com/cjrasmussen/BlueskyApi"
+  },
+  "require": {
+    "php": ">=7.4",
+    "ext-curl": "*",
+    "ext-json": "*"
+  },
+  "autoload": {
+    "psr-4": {
+      "cjrasmussen\\BlueskyApi\\": "src/"
+    }
+  }
+}
