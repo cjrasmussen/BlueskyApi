@@ -7,8 +7,8 @@ namespace cjrasmussen\BlueskyApi;
  */
 class BlueskyApi
 {
-	private ?string $accountDid;
-	private ?string $apiKey;
+	private ?string $accountDid = null;
+	private ?string $apiKey = null;
 	private string $apiUri;
 
 	public function __construct(?string $handle = null, ?string $app_password = null, string $api_uri = 'https://bsky.social/xrpc/')
