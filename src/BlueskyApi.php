@@ -7,8 +7,8 @@ namespace cjrasmussen\BlueskyApi;
  */
 class BlueskyApi
 {
-	private string $accountDid = '';
-	private string $apiKey = '';
+	private ?string $accountDid;
+	private ?string $apiKey;
 	private string $apiUri;
 
 	public function __construct(?string $handle = null, ?string $app_password = null, string $api_uri = 'https://bsky.social/xrpc/')
@@ -40,7 +40,7 @@ class BlueskyApi
 	 *
 	 * @return string
 	 */
-	public function getAccountDid(): string
+	public function getAccountDid(): ?string
 	{
 		return $this->accountDid;
 	}
@@ -48,10 +48,10 @@ class BlueskyApi
 	/**
 	 * Set the account DID for future requests
 	 *
-	 * @param string $account_did
+	 * @param string|null $account_did
 	 * @return void
 	 */
-	public function setAccountDid(string $account_did): void
+	public function setAccountDid(?string $account_did): void
 	{
 		$this->accountDid = $account_did;
 	}
@@ -59,10 +59,10 @@ class BlueskyApi
 	/**
 	 * Set the API key for future requests
 	 *
-	 * @param string $api_key
+	 * @param string|null $api_key
 	 * @return void
 	 */
-	public function setApiKey(string $api_key): void
+	public function setApiKey(?string $api_key): void
 	{
 		$this->apiKey = $api_key;
 	}
@@ -136,5 +136,4 @@ class BlueskyApi
 
 		return json_decode($data, false, 512, JSON_THROW_ON_ERROR);
 	}
-
 }
