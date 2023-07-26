@@ -68,6 +68,16 @@ class BlueskyApi
 	}
 
 	/**
+	 * Return whether an API key has been set
+	 *
+	 * @return bool
+	 */
+	public function hasApiKey(): bool
+	{
+		return $this->apiKey !== null;
+	}
+
+	/**
 	 * Make a request to the Bluesky API
 	 *
 	 * @param string $type
