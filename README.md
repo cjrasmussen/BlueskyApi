@@ -28,23 +28,23 @@ $response = $bluesky->request('POST', 'com.atproto.repo.uploadBlob', [], $body, 
 $image = $response->blob;
 
 $args = [
-  'collection' => 'app.bsky.feed.post',
-  'repo' => $bluesky->getAccountDid(),
-  'record' => [
-    'text' => 'Testing with an image #TestingInProduction',
-    'langs' => ['en'],
-    'createdAt' => date('c'),
-    '$type' => 'app.bsky.feed.post',
-    'embed' => [
-      '$type' => 'app.bsky.embed.images',
-      'images' => [
-        [
-          'alt' => 'A test image',
-          'image' => $image,
-        ],
-      ],
-    ],
-  ],
+	'collection' => 'app.bsky.feed.post',
+	'repo' => $bluesky->getAccountDid(),
+	'record' => [
+		'text' => 'Testing with an image #TestingInProduction',
+		'langs' => ['en'],
+		'createdAt' => date('c'),
+		'$type' => 'app.bsky.feed.post',
+		'embed' => [
+			'$type' => 'app.bsky.embed.images',
+			'images' => [
+				[
+					'alt' => 'A test image',
+					'image' => $image,
+				],
+			],
+		],
+	],
 ];
 $response = $bluesky->request('POST', 'com.atproto.repo.createRecord', $args);
 ```
