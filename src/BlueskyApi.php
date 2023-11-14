@@ -16,21 +16,14 @@ class BlueskyApi
 		$this->apiUri = $api_uri;
 
 		if (($handle) && ($app_password)) {
-			// GET DID FROM HANDLE
+			// GET DID AND API KEY FROM HANDLE AND APP PASSWORD
 			$args = [
-				'handle' => $handle,
-			];
-			$data = $this->request('GET', 'com.atproto.identity.resolveHandle', $args);
-
-			$this->accountDid = $data->did;
-
-			// GET API KEY FROM DID AND APP PASSWORD
-			$args = [
-				'identifier' => $this->accountDid,
+				'identifier' => $handle,
 				'password' => $app_password,
 			];
 			$data = $this->request('POST', 'com.atproto.server.createSession', $args);
 
+			$this->accountDid = $data->did;
 			$this->apiKey = $data->accessJwt;
 		}
 	}
