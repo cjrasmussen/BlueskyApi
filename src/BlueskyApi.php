@@ -2,6 +2,8 @@
 
 namespace cjrasmussen\BlueskyApi;
 
+use RuntimeException;
+
 /**
  * Class for interacting with the Bluesky API/AT protocol
  */
@@ -22,6 +24,10 @@ class BlueskyApi
 				'password' => $app_password,
 			];
 			$data = $this->request('POST', 'com.atproto.server.createSession', $args);
+
+			if ($data->error) {
+				throw new RuntimeException($data->message);
+			}
 
 			$this->accountDid = $data->did;
 			$this->apiKey = $data->accessJwt;
