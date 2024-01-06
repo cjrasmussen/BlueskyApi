@@ -7,7 +7,17 @@ Simple class for making requests to the Bluesky API/AT protocol.  Not affiliated
 ```php
 use cjrasmussen\BlueskyApi\BlueskyApi;
 
-$bluesky = new BlueskyApi($handle, $app_password);
+$bluesky = new BlueskyApi();
+
+// ESTABLISH SESSION WITH HANDLE AND PASSWORD
+try {
+    $bluesky->auth($handle, $app_password);
+} catch (Exception $e) {
+    // TODO: Handle the exception however you want
+}
+
+// GET REFRESH TOKEN FOR OPTIONAL CACHING
+$refresh_token = $bluesky->getRefreshToken();
 
 // SEND A MESSAGE
 $args = [
@@ -47,6 +57,20 @@ $args = [
 	],
 ];
 $response = $bluesky->request('POST', 'com.atproto.repo.createRecord', $args);
+```
+
+### Optional Session Refresh
+
+If you're running up against rate limits while creating sessions, you might want to cache the refresh token as noted above and use that to refresh your session instead of creating a new session. It should be noted that the refresh token can be used only once and a new one will be generated.
+
+```php
+try {
+    $bluesky->auth($refresh_token);
+} catch (Exception $e) {
+    // TODO: Handle the exception however you want
+}
+
+$refresh_token = $bluesky->getRefreshToken();
 ```
 
 ## Installation

@@ -2,6 +2,7 @@
 
 namespace cjrasmussen\BlueskyApi;
 
+use JsonException;
 use RuntimeException;
 
 /**
@@ -11,27 +12,36 @@ class BlueskyApi
 {
 	private ?string $accountDid = null;
 	private ?string $apiKey = null;
+	private ?string $refreshToken = null;
 	private string $apiUri;
 
-	public function __construct(?string $handle = null, ?string $app_password = null, string $api_uri = 'https://bsky.social/xrpc/')
+	public function __construct(string $api_uri = 'https://bsky.social/xrpc/')
 	{
 		$this->apiUri = $api_uri;
+	}
 
-		if (($handle) && ($app_password)) {
-			// GET DID AND API KEY FROM HANDLE AND APP PASSWORD
-			$args = [
-				'identifier' => $handle,
-				'password' => $app_password,
-			];
-			$data = $this->request('POST', 'com.atproto.server.createSession', $args);
-
-			if ($data->error) {
-				throw new RuntimeException($data->message);
-			}
-
-			$this->accountDid = $data->did;
-			$this->apiKey = $data->accessJwt;
+	/**
+	 * Authorize a user
+	 *
+	 * If handle and password are provided, a new session will be created. If a refresh token is provided, the session
+	 * will be refreshed.
+	 *
+	 * @param string $handleOrToken
+	 * @param string|null $app_password
+	 * @return void
+	 * @throws RuntimeException|JsonException
+	 */
+	public function auth(string $handleOrToken, ?string $app_password = null): void
+	{
+		if (($handleOrToken) && ($app_password)) {
+			$data = $this->startNewSession($handleOrToken, $app_password);
+		} else {
+			$data = $this->refreshSession($handleOrToken);
 		}
+
+		$this->accountDid = $data->did;
+		$this->apiKey = $data->accessJwt;
+		$this->refreshToken = $data->refreshJwt;
 	}
 
 	/**
@@ -45,35 +55,13 @@ class BlueskyApi
 	}
 
 	/**
-	 * Set the account DID for future requests
+	 * Get the refresh token
 	 *
-	 * @param string|null $account_did
-	 * @return void
+	 * @return string
 	 */
-	public function setAccountDid(?string $account_did): void
+	public function getRefreshToken(): ?string
 	{
-		$this->accountDid = $account_did;
-	}
-
-	/**
-	 * Set the API key for future requests
-	 *
-	 * @param string|null $api_key
-	 * @return void
-	 */
-	public function setApiKey(?string $api_key): void
-	{
-		$this->apiKey = $api_key;
-	}
-
-	/**
-	 * Return whether an API key has been set
-	 *
-	 * @return bool
-	 */
-	public function hasApiKey(): bool
-	{
-		return $this->apiKey !== null;
+		return $this->refreshToken;
 	}
 
 	/**
@@ -84,10 +72,10 @@ class BlueskyApi
 	 * @param array $args
 	 * @param string|null $body
 	 * @param string|null $content_type
-	 * @return mixed|object
-	 * @throws \JsonException
+	 * @return object
+	 * @throws JsonException
 	 */
-	public function request(string $type, string $request, array $args = [], ?string $body = null, string $content_type = null)
+	public function request(string $type, string $request, array $args = [], ?string $body = null, string $content_type = null): object
 	{
 		$url = $this->apiUri . $request;
 
@@ -99,7 +87,7 @@ class BlueskyApi
 
 		$headers = [];
 		if ($this->apiKey) {
-			$headers[] = 'Authorization: Bearer ' . $this->apiKey;
+			$headers[] = 'Authorization: Bearer ' .$this->apiKey;
 		}
 
 		if ($content_type) {
@@ -144,5 +132,48 @@ class BlueskyApi
 		curl_close($c);
 
 		return json_decode($data, false, 512, JSON_THROW_ON_ERROR);
+	}
+
+	/**
+	 * Start a new user session using handle and app password
+	 *
+	 * @param string $handle
+	 * @param string $app_password
+	 * @return object
+	 * @throws RuntimeException|JsonException
+	 */
+	private function startNewSession(string $handle, string $app_password): object
+	{
+		$args = [
+			'identifier' => $handle,
+			'password' => $app_password,
+		];
+		$data = $this->request('POST', 'com.atproto.server.createSession', $args);
+
+		if ($data->error) {
+			throw new RuntimeException($data->message);
+		}
+
+		return $data;
+	}
+
+	/**
+	 * Refresh a user session using an API key
+	 *
+	 * @param string $api_key
+	 * @return object
+	 * @throws RuntimeException|JsonException
+	 */
+	private function refreshSession(string $api_key): object
+	{
+		$this->apiKey = $api_key;
+		$data = $this->request('POST', 'com.atproto.server.refreshSession');
+		unset($this->apiKey);
+
+		if ($data->error) {
+			throw new RuntimeException($data->message);
+		}
+
+		return $data;
 	}
 }

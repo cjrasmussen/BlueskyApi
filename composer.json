@@ -1,8 +1,8 @@
 {
   "name": "cjrasmussen/bluesky-api",
   "description": "Simple helper for interacting with the Bluesky API/AT protocol",
-  "version": "1.1.2",
-  "keywords": ["Bluesky"],
+  "version": "2.0.0",
+  "keywords": ["Bluesky", "AT Protocol"],
   "homepage": "https://cjr.dev",
   "license": "MIT",
   "authors": [
