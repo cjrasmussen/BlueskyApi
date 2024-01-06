@@ -4,22 +4,45 @@ Simple class for making requests to the Bluesky API/AT protocol.  Not affiliated
 
 ## Usage
 
+### Starting a session
+
+Starting a session requires a handle and password.
+
 ```php
 use cjrasmussen\BlueskyApi\BlueskyApi;
 
 $bluesky = new BlueskyApi();
 
-// ESTABLISH SESSION WITH HANDLE AND PASSWORD
 try {
     $bluesky->auth($handle, $app_password);
 } catch (Exception $e) {
     // TODO: Handle the exception however you want
 }
+```
 
-// GET REFRESH TOKEN FOR OPTIONAL CACHING
+### Getting a refresh token
+
+If you're running up against rate limits by repeatedly creating a session, you may want to cache a refresh token and use that to refresh your session instead of starting a new one.  Cache it however you want for later usage.
+
+```php
 $refresh_token = $bluesky->getRefreshToken();
+```
 
-// SEND A MESSAGE
+### Refreshing a session
+
+You can use that cached refresh token later to refresh your session instead of starting a new session.
+
+```php
+try {
+    $bluesky->auth($refresh_token);
+} catch (Exception $e) {
+    // TODO: Handle the exception however you want
+}
+```
+
+### Sending a message
+
+```php
 $args = [
 	'collection' => 'app.bsky.feed.post',
 	'repo' => $bluesky->getAccountDid(),
@@ -31,8 +54,13 @@ $args = [
 	],
 ];
 $data = $bluesky->request('POST', 'com.atproto.repo.createRecord', $args);
+```
 
-// SEND A MESSAGE WITH AN IMAGE, ASSUMING $file IS A PNG
+### Sending a message with an attached image
+
+This assumes that your image file is a PNG
+
+```php
 $body = file_get_contents($file);
 $response = $bluesky->request('POST', 'com.atproto.repo.uploadBlob', [], $body, 'image/png');
 $image = $response->blob;
@@ -57,20 +85,6 @@ $args = [
 	],
 ];
 $response = $bluesky->request('POST', 'com.atproto.repo.createRecord', $args);
-```
-
-### Optional Session Refresh
-
-If you're running up against rate limits while creating sessions, you might want to cache the refresh token as noted above and use that to refresh your session instead of creating a new session. It should be noted that the refresh token can be used only once and a new one will be generated.
-
-```php
-try {
-    $bluesky->auth($refresh_token);
-} catch (Exception $e) {
-    // TODO: Handle the exception however you want
-}
-
-$refresh_token = $bluesky->getRefreshToken();
 ```
 
 ## Installation
