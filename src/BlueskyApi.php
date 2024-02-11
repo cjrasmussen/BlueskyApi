@@ -150,7 +150,7 @@ class BlueskyApi
 		];
 		$data = $this->request('POST', 'com.atproto.server.createSession', $args);
 
-		if ($data->error) {
+		if (!empty($data->error)) {
 			throw new RuntimeException($data->message);
 		}
 
