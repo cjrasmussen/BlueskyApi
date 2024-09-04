@@ -170,7 +170,7 @@ class BlueskyApi
 		$data = $this->request('POST', 'com.atproto.server.refreshSession');
 		unset($this->apiKey);
 
-		if ($data->error) {
+		if (!empty($data->error)) {
 			throw new RuntimeException($data->message);
 		}
 
