@@ -121,6 +121,8 @@ class BlueskyApi
 			curl_setopt($c, CURLOPT_POSTFIELDS, $body);
 		} elseif (($type !== 'GET') && (count($args))) {
 			curl_setopt($c, CURLOPT_POSTFIELDS, json_encode($args, JSON_THROW_ON_ERROR));
+		} elseif ($type === 'POST') {
+			curl_setopt($c, CURLOPT_POSTFIELDS, null);
 		}
 
 		curl_setopt($c, CURLOPT_HEADER, 0);
