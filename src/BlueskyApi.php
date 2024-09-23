@@ -28,10 +28,10 @@ class BlueskyApi
 	 *
 	 * @param string $handleOrToken
 	 * @param string|null $app_password
-	 * @return void
+	 * @return bool
 	 * @throws RuntimeException|JsonException
 	 */
-	public function auth(string $handleOrToken, ?string $app_password = null): void
+	public function auth(string $handleOrToken, ?string $app_password = null): bool
 	{
 		if (($handleOrToken) && ($app_password)) {
 			$data = $this->startNewSession($handleOrToken, $app_password);
@@ -42,6 +42,8 @@ class BlueskyApi
 		$this->accountDid = $data->did;
 		$this->apiKey = $data->accessJwt;
 		$this->refreshToken = $data->refreshJwt;
+
+		return (bool)$data->did;
 	}
 
 	/**
