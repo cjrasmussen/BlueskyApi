@@ -22,7 +22,7 @@ try {
 
 ### Getting a refresh token
 
-If you're running up against rate limits by repeatedly creating a session, you may want to cache a refresh token and use that to refresh your session instead of starting a new one.  Cache it however you want for later usage.
+If you're running up against rate limits by repeatedly creating a session, you may want to cache a refresh token and use that to refresh your session instead of starting a new one.  Cache it however you want for later usage, or see the session helper below.
 
 ```php
 $refresh_token = $bluesky->getRefreshToken();
@@ -85,6 +85,24 @@ $args = [
 	],
 ];
 $response = $bluesky->request('POST', 'com.atproto.repo.createRecord', $args);
+```
+
+### Using the session helper to manage refresh token caching
+
+As mentioned above, you can manually cache a session refresh token however you want. The BlueskyApiSessionHelper::auth method is one way of doing that. Provide the path to a file containing a refresh token and the method will refresh your session and update the cache file with the new refresh token. Optionally provide a handle and (app) password to fall back on creating a new session if the refresh token fails.
+
+```php
+use cjrasmussen\BlueskyApi\BlueskyApi;
+use cjrasmussen\BlueskyApi\BlueskyApiSessionHelper;
+
+$blueskyApi = new BlueskyApi();
+$blueskyApiSessionHelper = new BlueskyApiSessionHelper($blueskyApi);
+
+try {
+    $blueskyApiSessionHelper->auth($refresh_token_path, $handle, $password);
+} catch (Exception $e) {
+    // TODO: Handle the exception however you want
+}
 ```
 
 ## Installation
