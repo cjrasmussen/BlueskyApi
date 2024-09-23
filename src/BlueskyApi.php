@@ -87,7 +87,7 @@ class BlueskyApi
 
 		$headers = [];
 		if ($this->apiKey) {
-			$headers[] = 'Authorization: Bearer ' .$this->apiKey;
+			$headers[] = 'Authorization: Bearer ' . $this->apiKey;
 		}
 
 		if ($content_type) {
