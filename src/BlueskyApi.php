@@ -160,15 +160,15 @@ class BlueskyApi
 	}
 
 	/**
-	 * Refresh a user session using an API key
+	 * Refresh a user session using a refresh token
 	 *
-	 * @param string $api_key
+	 * @param string $refresh_token
 	 * @return object
 	 * @throws RuntimeException|JsonException
 	 */
-	private function refreshSession(string $api_key): object
+	private function refreshSession(string $refresh_token): object
 	{
-		$this->apiKey = $api_key;
+		$this->apiKey = $refresh_token;
 		$data = $this->request('POST', 'com.atproto.server.refreshSession');
 		$this->apiKey = null;
 
