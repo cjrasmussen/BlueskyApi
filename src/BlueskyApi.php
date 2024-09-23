@@ -14,6 +14,7 @@ class BlueskyApi
 	private ?string $apiKey = null;
 	private ?string $refreshToken = null;
 	private string $apiUri;
+	private ?array $lastResponseHeader = null;
 
 	public function __construct(string $api_uri = 'https://bsky.social/xrpc/')
 	{
@@ -67,6 +68,16 @@ class BlueskyApi
 	}
 
 	/**
+	 * Get the response headers from the most recent API request
+	 *
+	 * @return ?array
+	 */
+	public function getLastResponseHeader(): ?array
+	{
+		return $this->lastResponseHeader;
+	}
+
+	/**
 	 * Make a request to the Bluesky API
 	 *
 	 * @param string $type
@@ -101,6 +112,8 @@ class BlueskyApi
 			}
 		}
 
+		$this->lastResponseHeader = [];
+
 		$c = curl_init();
 		curl_setopt($c, CURLOPT_URL, $url);
 
@@ -131,7 +144,7 @@ class BlueskyApi
 		curl_setopt($c, CURLOPT_VERBOSE, 0);
 		curl_setopt($c, CURLOPT_RETURNTRANSFER, 1);
 		curl_setopt($c, CURLOPT_SSL_VERIFYPEER, 1);
-
+		curl_setopt($c, CURLOPT_HEADERFUNCTION, [$this, 'populateLastResponseHeader']);
 		$data = curl_exec($c);
 		curl_close($c);
 
@@ -179,5 +192,29 @@ class BlueskyApi
 		}
 
 		return $data;
+	}
+
+	/**
+	 * Populate an array with data from the
+	 *
+	 * @param $c - cUrl handler, required but not used
+	 * @param string $header
+	 * @return int
+	 */
+	private function populateLastResponseHeader($c, string $header): int
+	{
+		$header_length = strlen($header);
+		[$header_name, $header_value] = array_map('trim', explode(':', $header, 2));
+
+		if (!$header_value) {
+			return $header_length;
+		}
+
+		if (!array_key_exists($header_name, $this->lastResponseHeader)) {
+			$this->lastResponseHeader[$header_name] = [];
+		}
+
+		$this->lastResponseHeader[$header_name][] = $header_value;
+		return $header_length;
 	}
 }
