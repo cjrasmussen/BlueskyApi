@@ -165,6 +165,8 @@ class BlueskyApi
 	 */
 	private function startNewSession(string $handle, string $app_password): object
 	{
+		$this->apiKey = null;
+
 		$args = [
 			'identifier' => $handle,
 			'password' => $app_password,
