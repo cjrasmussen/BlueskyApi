@@ -105,6 +105,14 @@ try {
 }
 ```
 
+### Getting response headers for API requests
+
+Bluesky returns data about rate limits in the header of each API request response. The most recent request response headers can be accessed as a multi-dimensional array as follows:
+
+```php
+$blueskyApi->getLastResponseHeader();
+```
+
 ## Installation
 
 Simply add a dependency on cjrasmussen/bluesky-api to your composer.json file if you use [Composer](https://getcomposer.org/) to manage the dependencies of your project:
