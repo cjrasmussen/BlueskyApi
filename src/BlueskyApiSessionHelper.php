@@ -27,11 +27,12 @@ class BlueskyApiSessionHelper
 	 */
 	public function auth(string $tokenPath, ?string $handle = null, ?string $app_password = null): bool
 	{
-		$token = $throwException = $data = null;
-
 		if ($tokenPath === '') {
 			throw new RuntimeException('Token path must not be empty string');
 		}
+
+		$token = $throwException = null;
+		$authed = false;
 
 		if (file_exists($tokenPath)) {
 			$token = file_get_contents($tokenPath);
