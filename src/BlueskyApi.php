@@ -40,11 +40,15 @@ class BlueskyApi
 			$data = $this->refreshSession($handleOrToken);
 		}
 
-		$this->accountDid = $data->did;
-		$this->apiKey = $data->accessJwt;
-		$this->refreshToken = $data->refreshJwt;
+		if ($data) {
+			$this->accountDid = $data->did;
+			$this->apiKey = $data->accessJwt;
+			$this->refreshToken = $data->refreshJwt;
 
-		return (bool)$data->did;
+			return (bool)$data->did;
+		}
+
+		return false;
 	}
 
 	/**
@@ -172,10 +176,10 @@ class BlueskyApi
 	 *
 	 * @param string $handle
 	 * @param string $app_password
-	 * @return object
+	 * @return ?object
 	 * @throws RuntimeException|JsonException
 	 */
-	private function startNewSession(string $handle, string $app_password): object
+	private function startNewSession(string $handle, string $app_password): ?object
 	{
 		$this->apiKey = null;
 
@@ -196,10 +200,10 @@ class BlueskyApi
 	 * Refresh a user session using a refresh token
 	 *
 	 * @param string $refresh_token
-	 * @return object
+	 * @return ?object
 	 * @throws RuntimeException|JsonException
 	 */
-	private function refreshSession(string $refresh_token): object
+	private function refreshSession(string $refresh_token): ?object
 	{
 		$this->apiKey = $refresh_token;
 		$data = $this->request('POST', 'com.atproto.server.refreshSession');
