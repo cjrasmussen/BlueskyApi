@@ -31,6 +31,11 @@ class BlueskyApiSessionHelper
 			throw new RuntimeException('Token path must not be empty string');
 		}
 
+		if (($this->blueskyApi->getAccountDid()) && ($this->blueskyApi->isSessionActive())) {
+			// ALREADY HAVE AN ACTIVE SESSION
+			return true;
+		}
+
 		$token = $throwException = null;
 		$authed = false;
 
@@ -59,8 +64,8 @@ class BlueskyApiSessionHelper
 		$token = ($authed) ? $this->blueskyApi->getRefreshToken() : '';
 		file_put_contents($tokenPath, $token);
 
-		if ($throwException) {
-			// STILL GOT HERE WITH AN EXCEPTION? THROW IT
+		if ((!$authed) && ($throwException)) {
+			// AUTH FAILED AND GOT AN EXCEPTION? THROW IT
 			throw $throwException;
 		}
 

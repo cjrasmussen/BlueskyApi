@@ -48,6 +48,18 @@ class BlueskyApi
 	}
 
 	/**
+	 * Check to see if the current session is active
+	 *
+	 * @return bool
+	 * @throws JsonException
+	 */
+	public function isSessionActive(): bool
+	{
+		$data = $this->request('GET', 'com.atproto.server.getSession');
+		return (($data !== null) && empty($data->error));
+	}
+
+	/**
 	 * Get the current account DID
 	 *
 	 * @return string
