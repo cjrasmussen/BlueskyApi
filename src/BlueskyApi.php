@@ -85,10 +85,10 @@ class BlueskyApi
 	 * @param array $args
 	 * @param string|null $body
 	 * @param string|null $content_type
-	 * @return object
+	 * @return ?object
 	 * @throws JsonException
 	 */
-	public function request(string $type, string $request, array $args = [], ?string $body = null, string $content_type = null): object
+	public function request(string $type, string $request, array $args = [], ?string $body = null, string $content_type = null): ?object
 	{
 		$url = $this->apiUri . $request;
 
@@ -149,7 +149,7 @@ class BlueskyApi
 		curl_close($c);
 
 		if (!$data) {
-			return (object)[];
+			return null;
 		}
 
 		return json_decode($data, false, 512, JSON_THROW_ON_ERROR);
@@ -173,7 +173,7 @@ class BlueskyApi
 		];
 		$data = $this->request('POST', 'com.atproto.server.createSession', $args);
 
-		if (!empty($data->error)) {
+		if (($data !== null) && (!empty($data->error))) {
 			throw new RuntimeException($data->message);
 		}
 
@@ -193,7 +193,7 @@ class BlueskyApi
 		$data = $this->request('POST', 'com.atproto.server.refreshSession');
 		$this->apiKey = null;
 
-		if (!empty($data->error)) {
+		if (($data !== null) && (!empty($data->error))) {
 			throw new RuntimeException($data->message);
 		}
 
