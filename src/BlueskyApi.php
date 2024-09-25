@@ -159,6 +159,10 @@ class BlueskyApi
 		curl_setopt($c, CURLOPT_HEADER, 0);
 		curl_setopt($c, CURLOPT_VERBOSE, 0);
 		curl_setopt($c, CURLOPT_RETURNTRANSFER, 1);
+		curl_setopt($c, CURLOPT_ENCODING, '');
+		curl_setopt($c, CURLOPT_MAXREDIRS, 10);
+		curl_setopt($c, CURLOPT_FOLLOWLOCATION, 1);
+		curl_setopt($c, CURLOPT_HTTP_VERSION, CURL_HTTP_VERSION_1_1);
 		curl_setopt($c, CURLOPT_SSL_VERIFYPEER, 1);
 		curl_setopt($c, CURLOPT_HEADERFUNCTION, [$this, 'populateLastResponseHeader']);
 		$data = curl_exec($c);
