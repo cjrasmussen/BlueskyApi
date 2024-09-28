@@ -105,13 +105,15 @@ try {
 }
 ```
 
-### Getting response headers for API requests
+### Getting response header for API requests
 
-Bluesky returns data about rate limits in the header of each API request response. The most recent request response headers can be accessed as a multi-dimensional array as follows:
+Bluesky returns data about rate limits in the header of each API request response. The most recent request response header can be accessed as a string as follows:
 
 ```php
 $blueskyApi->getLastResponseHeader();
 ```
+
+The header can then be parsed as necessary.
 
 ## Installation
 

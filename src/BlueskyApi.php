@@ -14,7 +14,7 @@ class BlueskyApi
 	private ?string $apiKey = null;
 	private ?string $refreshToken = null;
 	private string $apiUri;
-	private ?array $lastResponseHeader = null;
+	private ?string $lastResponseHeader = null;
 
 	public function __construct(string $api_uri = 'https://bsky.social/xrpc/')
 	{
@@ -84,11 +84,11 @@ class BlueskyApi
 	}
 
 	/**
-	 * Get the response headers from the most recent API request
+	 * Get the response header from the most recent API request
 	 *
-	 * @return ?array
+	 * @return ?string
 	 */
-	public function getLastResponseHeader(): ?array
+	public function getLastResponseHeader(): ?string
 	{
 		return $this->lastResponseHeader;
 	}
@@ -128,8 +128,6 @@ class BlueskyApi
 			}
 		}
 
-		$this->lastResponseHeader = [];
-
 		$c = curl_init();
 		curl_setopt($c, CURLOPT_URL, $url);
 
@@ -156,7 +154,7 @@ class BlueskyApi
 			curl_setopt($c, CURLOPT_POSTFIELDS, null);
 		}
 
-		curl_setopt($c, CURLOPT_HEADER, 0);
+		curl_setopt($c, CURLOPT_HEADER, 1);
 		curl_setopt($c, CURLOPT_VERBOSE, 0);
 		curl_setopt($c, CURLOPT_RETURNTRANSFER, 1);
 		curl_setopt($c, CURLOPT_ENCODING, '');
@@ -164,15 +162,18 @@ class BlueskyApi
 		curl_setopt($c, CURLOPT_FOLLOWLOCATION, 1);
 		curl_setopt($c, CURLOPT_HTTP_VERSION, CURL_HTTP_VERSION_1_1);
 		curl_setopt($c, CURLOPT_SSL_VERIFYPEER, 1);
-		curl_setopt($c, CURLOPT_HEADERFUNCTION, [$this, 'populateLastResponseHeader']);
-		$data = curl_exec($c);
+		$response = curl_exec($c);
+		$header_length = curl_getinfo($c, CURLINFO_HEADER_SIZE);
 		curl_close($c);
 
-		if (!$data) {
+		if (!$response) {
 			return null;
 		}
 
-		return json_decode($data, false, 512, JSON_THROW_ON_ERROR);
+		$this->lastResponseHeader = substr($response, 0, $header_length);
+		$body = substr($response, $header_length);
+
+		return json_decode($body, false, 512, JSON_THROW_ON_ERROR);
 	}
 
 	/**
@@ -218,29 +219,5 @@ class BlueskyApi
 		}
 
 		return $data;
-	}
-
-	/**
-	 * Populate an array with data from the
-	 *
-	 * @param $c - cUrl handler, required but not used
-	 * @param string $header
-	 * @return int
-	 */
-	private function populateLastResponseHeader($c, string $header): int
-	{
-		$header_length = strlen($header);
-		[$header_name, $header_value] = array_map('trim', explode(':', $header, 2));
-
-		if (!$header_value) {
-			return $header_length;
-		}
-
-		if (!array_key_exists($header_name, $this->lastResponseHeader)) {
-			$this->lastResponseHeader[$header_name] = [];
-		}
-
-		$this->lastResponseHeader[$header_name][] = $header_value;
-		return $header_length;
 	}
 }
