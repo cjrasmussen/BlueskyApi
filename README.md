@@ -56,6 +56,70 @@ $args = [
 $data = $bluesky->request('POST', 'com.atproto.repo.createRecord', $args);
 ```
 
+### Sending a message with a hashtag
+
+The above example has a hashtag in the text, however it will not be rendered as a hashtag. You must explicitly define text as a hashtag when posting via the Bluesky API as the service won't do it for you.
+
+```php
+$args = [
+	'collection' => 'app.bsky.feed.post',
+	'repo' => $bluesky->getAccountDid(),
+	'record' => [
+		'text' => 'Testing #TestingInProduction',
+		'facets' => [
+			[
+				[
+					'index' => [
+						'byteStart' => 8,
+						'byteEnd' => 28,
+					],
+					'features' => [
+						'$type' => 'app.bsky.richtext.facet#tag',
+						'tag' => 'TestingInProduction',
+					],
+				],
+			],		
+		],
+		'langs' => ['en'],
+		'createdAt' => date('c'),
+		'$type' => 'app.bsky.feed.post',
+	],
+];
+$data = $bluesky->request('POST', 'com.atproto.repo.createRecord', $args);
+```
+
+### Sending a message with a link
+
+Similarly, you must explicitly define links in text when posting via the Bluesky API.
+
+```php
+$args = [
+	'collection' => 'app.bsky.feed.post',
+	'repo' => $bluesky->getAccountDid(),
+	'record' => [
+		'text' => 'Testing https://cjr.dev',
+		'facets' => [
+			[
+				[
+					'index' => [
+						'byteStart' => 8,
+						'byteEnd' => 23,
+					],
+					'features' => [
+						'$type' => 'app.bsky.richtext.facet#link',
+						'tag' => 'https://cjr.dev',
+					],
+				],
+			],		
+		],
+		'langs' => ['en'],
+		'createdAt' => date('c'),
+		'$type' => 'app.bsky.feed.post',
+	],
+];
+$data = $bluesky->request('POST', 'com.atproto.repo.createRecord', $args);
+```
+
 ### Sending a message with an attached image
 
 This assumes that your image file is a PNG
