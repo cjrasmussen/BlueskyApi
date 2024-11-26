@@ -68,7 +68,6 @@ $args = [
 		'text' => 'Testing #TestingInProduction',
 		'facets' => [
 			[
-				
 				'index' => [
 					'byteStart' => 8,
 					'byteEnd' => 28,
@@ -79,7 +78,6 @@ $args = [
 						'tag' => 'TestingInProduction',
 					],
 				],
-				
 			],		
 		],
 		'langs' => ['en'],
@@ -102,7 +100,6 @@ $args = [
 		'text' => 'Testing https://cjr.dev',
 		'facets' => [
 			[
-				
 				'index' => [
 					'byteStart' => 8,
 					'byteEnd' => 23,
@@ -113,7 +110,6 @@ $args = [
 						'tag' => 'https://cjr.dev',
 					],
 				],
-				
 			],		
 		],
 		'langs' => ['en'],
