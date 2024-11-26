@@ -68,16 +68,18 @@ $args = [
 		'text' => 'Testing #TestingInProduction',
 		'facets' => [
 			[
-				[
-					'index' => [
-						'byteStart' => 8,
-						'byteEnd' => 28,
-					],
-					'features' => [
+				
+				'index' => [
+					'byteStart' => 8,
+					'byteEnd' => 28,
+				],
+				'features' => [
+					[
 						'$type' => 'app.bsky.richtext.facet#tag',
 						'tag' => 'TestingInProduction',
 					],
 				],
+				
 			],		
 		],
 		'langs' => ['en'],
@@ -100,16 +102,18 @@ $args = [
 		'text' => 'Testing https://cjr.dev',
 		'facets' => [
 			[
-				[
-					'index' => [
-						'byteStart' => 8,
-						'byteEnd' => 23,
-					],
-					'features' => [
+				
+				'index' => [
+					'byteStart' => 8,
+					'byteEnd' => 23,
+				],
+				'features' => [
+					[
 						'$type' => 'app.bsky.richtext.facet#link',
 						'tag' => 'https://cjr.dev',
 					],
 				],
+				
 			],		
 		],
 		'langs' => ['en'],
