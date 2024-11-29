@@ -107,7 +107,7 @@ $args = [
 				'features' => [
 					[
 						'$type' => 'app.bsky.richtext.facet#link',
-						'tag' => 'https://cjr.dev',
+						'uri' => 'https://cjr.dev',
 					],
 				],
 			],		
