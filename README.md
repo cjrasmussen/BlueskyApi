@@ -191,7 +191,7 @@ Although it's recommended to use Composer, you can actually include the file(s) 
 
 ## Further Reference
 
-It's not much, but I do have some Bluesky API-related stuff [on my blog](https://cjr.dev/?s=bluesky). Additionally, there's an unofficial Discord for Bluesky API users with a [PHP-focused channel](https://discord.com/channels/1097580399187738645/1100721113702608999).
+It's not much, but I do have some Bluesky API-related stuff [on my blog](https://cjr.dev/?s=bluesky). Additionally, there's an unofficial "Bluesky API Touchers" Discord (which seems to be invite-only) with a PHP-specific channel.
 
 ## License
 
