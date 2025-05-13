@@ -79,9 +79,9 @@ class BlueskyApi
 	/**
 	 * Get the endpoint URI from the session if available
 	 *
-	 * @return ?string
+	 * @return string
 	 */
-	public function getSessionHost(): ?string
+	public function getSessionHost(): string
 	{
 		if (($this->activeSession) && (isset($this->activeSession->didDoc)) && (is_array($this->activeSession->didDoc->service))) {
 			foreach ($this->activeSession->didDoc->service AS $service) {
