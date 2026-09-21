@@ -20,8 +20,8 @@ class BlueskyApiSessionHelper
 	 * Upon successful authorization, the specified file will be updated with the new session token.
 	 *
 	 * @param string $tokenPath
-	 * @param ?string $handle
-	 * @param ?string $app_password
+	 * @param string|null $handle
+	 * @param string|null $app_password
 	 * @return bool
 	 * @throws RuntimeException|JsonException
 	 */

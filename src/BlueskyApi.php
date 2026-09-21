@@ -97,21 +97,17 @@ class BlueskyApi
 	/**
 	 * Get the current account DID
 	 *
-	 * @return string
+	 * @return string|null
 	 */
 	public function getAccountDid(): ?string
 	{
-		if ($this->activeSession) {
-			return $this->activeSession->did;
-		}
-
-		return null;
+		return $this->activeSession?->did;
 	}
 
 	/**
 	 * Get the refresh token
 	 *
-	 * @return string
+	 * @return string|null
 	 */
 	public function getRefreshToken(): ?string
 	{
@@ -121,7 +117,7 @@ class BlueskyApi
 	/**
 	 * Get the response header from the most recent API request
 	 *
-	 * @return ?string
+	 * @return string|null
 	 */
 	public function getLastResponseHeader(): ?string
 	{
@@ -138,7 +134,7 @@ class BlueskyApi
 	 * @param string|null $content_type
 	 * @param string|null $endpoint_host
 	 * @param string|null $token
-	 * @return ?object
+	 * @return object|null
 	 * @throws JsonException
 	 */
 	public function request(string $type, string $request, array $args = [], ?string $body = null, ?string $content_type = null, ?string $endpoint_host = null, ?string $token = null): ?object
@@ -210,7 +206,6 @@ class BlueskyApi
 		curl_setopt($c, CURLOPT_SSL_VERIFYPEER, 1);
 		$response = curl_exec($c);
 		$header_length = curl_getinfo($c, CURLINFO_HEADER_SIZE);
-		curl_close($c);
 
 		if (!$response) {
 			return null;
